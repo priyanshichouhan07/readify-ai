@@ -9,21 +9,31 @@ import streamlit as st
 from azure.cognitiveservices.speech import ResultReason, SpeechConfig, SpeechSynthesizer
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
-from dotenv import load_dotenv
 from msrest.authentication import CognitiveServicesCredentials
+from dotenv import load_dotenv
+import os
 
 
 # =========================================================
 # CONFIG
 # =========================================================
 
+
 load_dotenv()
 
-VISION_KEY = os.getenv("VISION_KEY")
-VISION_ENDPOINT = os.getenv("VISION_ENDPOINT")
+try:
+    VISION_KEY = st.secrets["VISION_KEY"]
+    VISION_ENDPOINT = st.secrets["VISION_ENDPOINT"]
 
-SPEECH_KEY = os.getenv("SPEECH_KEY")
-SPEECH_REGION = os.getenv("SPEECH_REGION", "eastus")
+    SPEECH_KEY = st.secrets["SPEECH_KEY"]
+    SPEECH_REGION = st.secrets["SPEECH_REGION"]
+
+except Exception:
+    VISION_KEY = os.getenv("VISION_KEY")
+    VISION_ENDPOINT = os.getenv("VISION_ENDPOINT")
+
+    SPEECH_KEY = os.getenv("SPEECH_KEY")
+    SPEECH_REGION = os.getenv("SPEECH_REGION", "eastus")
 
 st.set_page_config(
     page_title="Readify AI",
@@ -475,7 +485,7 @@ with right:
     st.markdown("<div class='section-title'>2. Preview</div>", unsafe_allow_html=True)
 
     if uploaded:
-        st.image(uploaded, width='stretch')
+        st.image(uploaded, use_container_width=True)
     else:
         st.markdown(
             """
